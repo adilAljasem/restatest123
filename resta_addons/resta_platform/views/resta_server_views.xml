@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_resta_server_kanban" model="ir.ui.view">
+        <field name="name">resta.server.kanban</field>
+        <field name="model">resta.server</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="capacity"/>
+                <field name="online"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="state" widget="badge" decoration-success="state == 'ready'"
+                                   decoration-warning="state in ('full', 'provisioning', 'maintenance')"
+                                   decoration-danger="state == 'error'"/>
+                        </div>
+                        <div class="text-muted small"><field name="kind"/> — <field name="machine_type"/></div>
+                        <div class="mt-2">الحمل <field name="load_percent" widget="progressbar"/></div>
+                        <div class="d-flex justify-content-between small mt-1">
+                            <span>المعالج <field name="cpu_percent"/>%</span>
+                            <span>الذاكرة <field name="ram_percent"/>%</span>
+                            <span>القرص <field name="disk_percent"/>%</span>
+                        </div>
+                        <footer class="pt-1">
+                            <span>المشاريع: <field name="project_count"/> / <t t-esc="record.capacity.raw_value"/></span>
+                            <span class="ms-auto small text-muted"><field name="last_seen" widget="remaining_days"/></span>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_resta_server_list" model="ir.ui.view">
+        <field name="name">resta.server.list</field>
+        <field name="model">resta.server</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'error'" decoration-warning="state == 'full'">
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="state" widget="badge"/>
+                <field name="machine_type"/>
+                <field name="external_ip"/>
+                <field name="project_count"/>
+                <field name="capacity"/>
+                <field name="load_percent" widget="progressbar"/>
+                <field name="last_seen"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_resta_server_form" model="ir.ui.view">
+        <field name="name">resta.server.form</field>
+        <field name="model">resta.server</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_provision" type="object" string="إنشاء في Google Cloud" class="btn-primary"
+                            invisible="state not in ('draft', 'error') or provider != 'gcp' or registered"
+                            confirm="سيتم إنشاء سيرفر جديد في Google Cloud وتبدأ تكلفته. متأكد؟"
+                            groups="resta_platform.group_resta_manager"/>
+                    <button name="action_refresh" type="object" string="تحديث الأداء" invisible="not registered"/>
+                    <button name="action_backup_all" type="object" string="نسخ احتياطي لكل القواعد" invisible="not registered"/>
+                    <button name="action_deploy" type="object" string="تحديث الكود"
+                            invisible="state not in ('ready', 'full', 'maintenance')"
+                            confirm="سيتم سحب آخر كود وتحديث كل القواعد، والسيرفر يتوقف دقائق. متأكد؟"
+                            groups="resta_platform.group_resta_manager"/>
+                    <button name="action_rebuild_templates" type="object" string="إعادة بناء القوالب"
+                            invisible="kind != 'cell' or not registered" groups="resta_platform.group_resta_manager"/>
+                    <button name="action_maintenance" type="object" string="وضع الصيانة"
+                            invisible="state not in ('ready', 'full')" groups="resta_platform.group_resta_manager"/>
+                    <button name="action_set_ready" type="object" string="إنهاء الصيانة"
+                            invisible="state not in ('maintenance', 'error')" groups="resta_platform.group_resta_manager"/>
+                    <button name="action_retire" type="object" string="إيقاف نهائي" class="btn-danger"
+                            invisible="state in ('retired', 'draft')"
+                            confirm="سيُحذف السيرفر من Google Cloud نهائياً. متأكد إن ما عليه مشاريع؟"
+                            groups="resta_platform.group_resta_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,provisioning,ready"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title"><h1><field name="name" placeholder="cell-01"/></h1></div>
+                    <group>
+                        <group string="السيرفر">
+                            <field name="kind"/>
+                            <field name="provider"/>
+                            <field name="zone"/>
+                            <field name="machine_type"/>
+                            <field name="disk_gb"/>
+                            <field name="capacity"/>
+                            <field name="instance_name"/>
+                        </group>
+                        <group string="الاتصال">
+                            <field name="external_ip"/>
+                            <field name="internal_ip"/>
+                            <field name="agent_port"/>
+                            <field name="registered"/>
+                            <field name="online"/>
+                            <field name="last_seen"/>
+                            <field name="agent_version"/>
+                        </group>
+                    </group>
+                    <group string="الأداء">
+                        <group>
+                            <field name="load_percent" widget="progressbar"/>
+                            <field name="cpu_percent"/>
+                            <field name="ram_percent"/>
+                            <field name="disk_percent"/>
+                        </group>
+                        <group>
+                            <field name="project_count"/>
+                            <field name="db_count"/>
+                            <field name="templates_ready"/>
+                            <field name="last_backup_all"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="المشاريع">
+                            <field name="project_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="db_size_mb"/>
+                                    <field name="last_backup"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="العمليات">
+                            <field name="operation_ids" readonly="1">
+                                <list limit="20">
+                                    <field name="name"/>
+                                    <field name="op_type"/>
+                                    <field name="project_id"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="create_date"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="الأسرار" groups="base.group_system">
+                            <group>
+                                <field name="agent_secret" password="True"/>
+                                <field name="db_password" password="True"/>
+                                <field name="master_password" password="True"/>
+                            </group>
+                        </page>
+                        <page string="ملاحظات"><field name="notes"/></page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_resta_server" model="ir.actions.act_window">
+        <field name="name">السيرفرات</field>
+        <field name="res_model">resta.server</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('state', '!=', 'retired')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">أنشئ أول خلية (cell-01) واضغط "إنشاء في Google Cloud"</p>
+        </field>
+    </record>
+</odoo>

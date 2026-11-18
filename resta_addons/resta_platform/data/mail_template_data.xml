@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="mail_template_welcome" model="mail.template">
+        <field name="name">ريستا: نظامك جاهز</field>
+        <field name="model_id" ref="model_resta_project"/>
+        <field name="subject">نظام {{ object.name }} جاهز على ريستا</field>
+        <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.admin_email }}</field>
+        <field name="body_html" type="html">
+<div dir="rtl" style="font-family:Tahoma,Arial,sans-serif;font-size:15px;line-height:1.9">
+    <p>أهلاً <t t-out="object.admin_name or object.partner_id.name or ''"/>،</p>
+    <p>نظام <strong t-out="object.name"/> جاهز.</p>
+    <p>الرابط: <a t-att-href="object.url" t-out="object.url"/></p>
+    <p>اسم المستخدم: <strong t-out="object.admin_email"/></p>
+    <p t-if="object.sudo().initial_password">كلمة المرور المؤقتة: <strong t-out="object.sudo().initial_password"/></p>
+    <p>غيّر كلمة المرور أول ما تدخل من: الإعدادات ← حسابي.</p>
+    <p t-if="object.trial_end">فترة التجربة المجانية حتى <t t-out="object.trial_end"/>.</p>
+    <p>نموّك يصنع ربحك، ونحن نكبر معك.<br/>فريق ريستا</p>
+</div>
+        </field>
+    </record>
+</odoo>

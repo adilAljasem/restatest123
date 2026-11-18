@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <!-- The Odoo wordmark drawn by the POS (customer display, screens) becomes the Resta one -->
+    <t t-inherit="point_of_sale.OdooLogo" t-inherit-mode="extension">
+        <xpath expr="//svg" position="replace">
+            <img class="img-fluid" alt="Resta"
+                 t-att-src="props.monochrome ? '/resta_sidebar_theme/static/img/resta-wordmark-white.svg' : '/resta_sidebar_theme/static/img/resta-wordmark-default.svg'"/>
+        </xpath>
+    </t>
+</templates>

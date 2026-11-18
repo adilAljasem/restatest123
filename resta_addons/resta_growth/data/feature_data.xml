@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Accounting and journals are open from the first day: the point of sale needs them to work
+         (payment methods, journals, taxes, invoices). Inventory opens at the end of level 1 and the
+         profitability analysis at the end of level 2. HR and loyalty arrive in phase 2. -->
+    <record id="feature_accounting" model="resta.growth.feature">
+        <field name="key">accounting</field>
+        <field name="name">المحاسبة والدفاتر</field>
+        <field name="sequence">0</field>
+        <field name="level_id" ref="level_foundation"/>
+        <field name="open_from_start" eval="True"/>
+        <field name="icon">fa-calculator</field>
+        <field name="teaser">مفتوحة من أول يوم: الدفاتر وطرق الدفع والضرائب والفواتير لنقاط البيع.</field>
+        <field name="menu_ids" eval="[(6, 0, [ref('account.menu_finance')])]"/>
+        <field name="entry_action_xmlid">account.action_move_out_invoice</field>
+    </record>
+    <record id="feature_inventory" model="resta.growth.feature">
+        <field name="key">inventory</field>
+        <field name="name">إدارة المخزون</field>
+        <field name="sequence">1</field>
+        <field name="level_id" ref="level_foundation"/>
+        <field name="icon">fa-cubes</field>
+        <field name="teaser">اعرف وين يروح كل كيلو: جرد، هدر، واستلام مشتريات.</field>
+        <field name="menu_ids" eval="[(6, 0, [ref('stock.menu_stock_root')])]"/>
+        <field name="entry_action_xmlid">stock.action_view_inventory_tree</field>
+    </record>
+    <record id="feature_financial_analysis" model="resta.growth.feature">
+        <field name="key">financial_analysis</field>
+        <field name="name">تحليل الربحية</field>
+        <field name="sequence">2</field>
+        <field name="level_id" ref="level_discipline"/>
+        <field name="icon">fa-line-chart</field>
+        <field name="teaser">شوف ربحك الحقيقي: ربح كل فرع، التدفق النقدي، والموازنات.</field>
+        <field name="entry_action_xmlid">resta_account.action_report_pl_branch</field>
+    </record>
+</odoo>

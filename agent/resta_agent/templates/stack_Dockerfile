@@ -1,0 +1,8 @@
+# صورة أودو 19 الرسمية + متطلبات بايثون الخاصة بموديولاتكم (requirements.txt في المستودع)
+FROM odoo:19.0
+USER root
+COPY requirements.txt /tmp/resta-requirements.txt
+RUN if [ -s /tmp/resta-requirements.txt ]; then \
+      pip3 install --no-cache-dir --break-system-packages -r /tmp/resta-requirements.txt; \
+    fi
+USER odoo

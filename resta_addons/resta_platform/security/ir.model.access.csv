@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_resta_plan_user,resta.plan user,model_resta_plan,group_resta_user,1,0,0,0
+access_resta_plan_manager,resta.plan manager,model_resta_plan,group_resta_manager,1,1,1,1
+access_resta_server_user,resta.server user,model_resta_server,group_resta_user,1,0,0,0
+access_resta_server_manager,resta.server manager,model_resta_server,group_resta_manager,1,1,1,1
+access_resta_project_user,resta.project user,model_resta_project,group_resta_user,1,1,1,0
+access_resta_project_manager,resta.project manager,model_resta_project,group_resta_manager,1,1,1,1
+access_resta_operation_user,resta.operation user,model_resta_operation,group_resta_user,1,1,1,0
+access_resta_operation_manager,resta.operation manager,model_resta_operation,group_resta_manager,1,1,1,1
+access_resta_metric_user,resta.metric user,model_resta_metric,group_resta_user,1,0,0,0
+access_resta_metric_manager,resta.metric manager,model_resta_metric,group_resta_manager,1,1,1,1
+access_resta_restore_wizard_manager,resta.restore.wizard manager,model_resta_restore_wizard,group_resta_manager,1,1,1,1

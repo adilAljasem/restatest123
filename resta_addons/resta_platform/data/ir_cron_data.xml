@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="cron_process_operations" model="ir.cron">
+        <field name="name">ريستا: إرسال العمليات للسيرفرات</field>
+        <field name="model_id" ref="model_resta_operation"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_process()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+    </record>
+    <record id="cron_server_health" model="ir.cron">
+        <field name="name">ريستا: أداء السيرفرات والتوسع</field>
+        <field name="model_id" ref="model_resta_server"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_health()</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+    </record>
+    <record id="cron_billing" model="ir.cron">
+        <field name="name">ريستا: الفواتير الشهرية والإيقاف عند التأخر</field>
+        <field name="model_id" ref="model_resta_project"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_billing()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+    <record id="cron_metric_cleanup" model="ir.cron">
+        <field name="name">ريستا: تنظيف قراءات الأداء القديمة</field>
+        <field name="model_id" ref="model_resta_metric"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_cleanup()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>

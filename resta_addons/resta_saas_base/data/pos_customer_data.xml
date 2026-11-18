@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- In Saudi Arabia every POS order is invoiced (ZATCA), and an invoice needs a customer.
+         Walk-in customers are billed to «عميل نقدي» (simplified B2C invoice): the cashier never has to pick one. -->
+    <data noupdate="1">
+        <record id="partner_cash_customer" model="res.partner">
+            <field name="name">عميل نقدي</field>
+            <field name="company_type">person</field>
+            <field name="country_id" ref="base.sa"/>
+        </record>
+    </data>
+    <function model="pos.config" name="_resta_set_cash_customer"/>
+</odoo>

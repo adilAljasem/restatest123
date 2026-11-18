@@ -1,0 +1,20 @@
+{
+    "name": "Batch Scrap Orders",
+    "summary": "Create and validate multiple scrap orders in one batch",
+    "version": "19.0.1.2.0",
+    "category": "Inventory/Inventory",
+    "license": "LGPL-3",
+    "author": "Resta",
+    "website": "https://resta.sa",
+    "depends": ["stock_account", "mrp"],
+    "data": [
+        "security/batch_scrap_security.xml",
+        "security/ir.model.access.csv",
+        "data/batch_scrap_sequence.xml",
+        "views/batch_scrap_order_views.xml",
+        "views/stock_scrap_views.xml",
+        "views/batch_scrap_menus.xml",
+    ],
+    "installable": True,
+    "application": False,
+}

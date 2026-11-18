@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_resta_root" name="منصة ريستا" sequence="45" web_icon="resta_platform,static/description/icon.png"
+              groups="resta_platform.group_resta_user"/>
+    <menuitem id="menu_resta_projects" name="المشاريع" parent="menu_resta_root" action="action_resta_project" sequence="10"/>
+    <menuitem id="menu_resta_servers" name="السيرفرات" parent="menu_resta_root" action="action_resta_server" sequence="20"/>
+    <menuitem id="menu_resta_operations" name="العمليات" parent="menu_resta_root" action="action_resta_operation" sequence="30"/>
+    <menuitem id="menu_resta_invoices" name="الفوترة" parent="menu_resta_root" action="action_resta_invoices" sequence="40"
+              groups="account.group_account_invoice"/>
+    <menuitem id="menu_resta_config" name="الإعدادات" parent="menu_resta_root" sequence="90"
+              groups="resta_platform.group_resta_manager"/>
+    <menuitem id="menu_resta_plans" name="الباقات" parent="menu_resta_config" action="action_resta_plan" sequence="10"/>
+    <menuitem id="menu_resta_settings" name="إعدادات المنصة" parent="menu_resta_config"
+              action="action_resta_settings" sequence="20"/>
+</odoo>

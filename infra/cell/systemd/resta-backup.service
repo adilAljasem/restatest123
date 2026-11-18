@@ -1,0 +1,10 @@
+[Unit]
+Description=Resta nightly backup (3 locations) and retention
+After=docker.service
+
+[Service]
+Type=oneshot
+Environment=RESTA_AGENT_CONFIG=/etc/resta/config.json
+ExecStart=/opt/resta-agent/bin/resta-agent backup-all
+Nice=10
+IOSchedulingClass=idle

@@ -1,0 +1,23 @@
+# طبقة أودو: {{STACK}}
+name: resta-{{STACK}}
+services:
+  odoo:
+    build: .
+    image: resta-odoo-{{STACK}}:latest
+    container_name: odoo-{{STACK}}
+    restart: unless-stopped
+    volumes:
+      - {{ROOT}}/stacks/{{STACK}}/addons:/mnt/addons:ro
+      - {{ROOT}}/stacks/{{STACK}}/enterprise:/mnt/enterprise:ro
+      - {{ROOT}}/stacks/{{STACK}}/odoo.conf:/etc/odoo/odoo.conf:ro
+      - {{ROOT}}/data/odoo:/var/lib/odoo
+    networks: [resta]
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8069/web/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+networks:
+  resta:
+    external: true

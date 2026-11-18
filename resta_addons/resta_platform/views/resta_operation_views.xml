@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_resta_operation_list" model="ir.ui.view">
+        <field name="name">resta.operation.list</field>
+        <field name="model">resta.operation</field>
+        <field name="arch" type="xml">
+            <list create="0" decoration-danger="state == 'failed'" decoration-success="state == 'done'"
+                  decoration-info="state == 'running'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="op_type"/>
+                <field name="project_id"/>
+                <field name="server_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'"
+                       decoration-danger="state == 'failed'" decoration-info="state == 'running'"/>
+                <field name="attempts" optional="hide"/>
+                <field name="create_date" string="الطلب"/>
+                <field name="duration" optional="show"/>
+                <field name="requested_by" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_resta_operation_form" model="ir.ui.view">
+        <field name="name">resta.operation.form</field>
+        <field name="model">resta.operation</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <button name="action_send_now" type="object" string="أرسل الآن" class="btn-primary"
+                            invisible="state != 'pending'"/>
+                    <button name="action_retry" type="object" string="أعد المحاولة"
+                            invisible="state not in ('failed', 'cancelled')" groups="resta_platform.group_resta_manager"/>
+                    <button name="action_cancel" type="object" string="إلغاء" invisible="state != 'pending'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,running,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="op_type"/>
+                            <field name="project_id"/>
+                            <field name="server_id"/>
+                            <field name="depends_on_id"/>
+                        </group>
+                        <group>
+                            <field name="requested_by"/>
+                            <field name="date_sent"/>
+                            <field name="date_done"/>
+                            <field name="duration"/>
+                            <field name="attempts"/>
+                            <field name="next_try" invisible="state != 'pending'"/>
+                            <field name="job_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="النتيجة"><field name="result" widget="ace" options="{'mode': 'json'}"/></page>
+                        <page string="الخطأ" invisible="not error"><field name="error"/></page>
+                        <page string="المعطيات" groups="resta_platform.group_resta_manager">
+                            <field name="payload" widget="ace" options="{'mode': 'json'}" readonly="state != 'pending'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_resta_operation_search" model="ir.ui.view">
+        <field name="name">resta.operation.search</field>
+        <field name="model">resta.operation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="server_id"/>
+                <filter name="open" string="مفتوحة" domain="[('state', 'in', ('pending', 'running'))]"/>
+                <filter name="failed" string="فاشلة" domain="[('state', '=', 'failed')]"/>
+                <separator/>
+                <filter name="by_type" string="العملية" context="{'group_by': 'op_type'}"/>
+                <filter name="by_server" string="السيرفر" context="{'group_by': 'server_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_resta_operation" model="ir.actions.act_window">
+        <field name="name">العمليات</field>
+        <field name="res_model">resta.operation</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_open': 1}</field>
+    </record>
+</odoo>

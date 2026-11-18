@@ -1,0 +1,14 @@
+[Unit]
+Description=Resta cell agent
+After=docker.service network-online.target
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Environment=RESTA_AGENT_CONFIG=/etc/resta/config.json
+ExecStart=/opt/resta-agent/bin/resta-agent serve
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

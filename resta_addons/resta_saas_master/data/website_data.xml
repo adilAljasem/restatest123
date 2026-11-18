@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="website.default_website" model="website">
+        <field name="name">ريستا</field>
+        <field name="homepage_url">/resta</field>
+    </record>
+    <!-- the platform site: Resta logo instead of the «Your Logo» placeholder -->
+    <function model="res.company" name="_resta_brand_websites"/>
+</odoo>

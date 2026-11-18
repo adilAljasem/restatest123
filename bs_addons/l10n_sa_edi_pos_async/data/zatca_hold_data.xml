@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- sales journals not onboarded with ZATCA yet: phase-1 invoices until the onboarding -->
+    <function model="account.journal" name="_l10n_sa_hold_zatca_until_onboarded"/>
+</odoo>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="product_resta_subscription" model="product.product">
+        <field name="name">اشتراك ريستا</field>
+        <field name="type">service</field>
+        <field name="list_price">0</field>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+    </record>
+    <record id="product_resta_hosting" model="product.product">
+        <field name="name">استضافة مشروع أودو</field>
+        <field name="type">service</field>
+        <field name="list_price">0</field>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+    </record>
+    <record id="plan_saas_dinein" model="resta.plan">
+        <field name="name">ريستا صالة — أساسي</field>
+        <field name="project_type">saas</field>
+        <field name="edition">dinein</field>
+        <field name="is_default" eval="True"/>
+        <field name="product_id" ref="product_resta_subscription"/>
+        <field name="base_price">499</field>
+        <field name="included_branches">1</field>
+        <field name="price_per_branch">299</field>
+        <field name="included_storage_gb">10</field>
+        <field name="price_per_gb">5</field>
+    </record>
+    <record id="plan_saas_fastfood" model="resta.plan">
+        <field name="name">ريستا وجبات سريعة — أساسي</field>
+        <field name="project_type">saas</field>
+        <field name="edition">fastfood</field>
+        <field name="is_default" eval="True"/>
+        <field name="product_id" ref="product_resta_subscription"/>
+        <field name="base_price">399</field>
+        <field name="included_branches">1</field>
+        <field name="price_per_branch">249</field>
+        <field name="included_storage_gb">10</field>
+        <field name="price_per_gb">5</field>
+    </record>
+    <record id="plan_custom_standard" model="resta.plan">
+        <field name="name">استضافة كاستم — سيرفر خاص</field>
+        <field name="project_type">custom</field>
+        <field name="product_id" ref="product_resta_hosting"/>
+        <field name="base_price">1200</field>
+        <field name="included_storage_gb">50</field>
+        <field name="price_per_gb">3</field>
+        <field name="machine_type">e2-standard-2</field>
+        <field name="disk_gb">100</field>
+    </record>
+</odoo>

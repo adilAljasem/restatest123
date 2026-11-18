@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <!-- Standard receipt: the restaurant's name when it has no logo of its own (no placeholder picture) -->
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//img[hasclass('pos-receipt-logo')]" position="attributes">
+            <attribute name="t-if">order.company?.pos_has_logo !== false</attribute>
+        </xpath>
+        <xpath expr="//img[hasclass('pos-receipt-logo')]" position="after">
+            <div t-else="" class="pos-receipt-company-name text-center fw-bolder fs-2" t-esc="order.company?.name"/>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Run at every update: menus of apps installed later join their feature, the features that are open
+     from the first day are open (a template or an older database included), and the restaurant owner
+     has every business right of the installed apps (creating products included). -->
+<odoo>
+    <function model="resta.growth.feature" name="_link_optional_menus"/>
+    <function model="resta.growth.feature" name="_open_from_start"/>
+    <function model="res.users" name="_resta_sync_owner_groups"/>
+</odoo>

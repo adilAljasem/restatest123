@@ -1,0 +1,44 @@
+# قاعدة البيانات وnginx — مشتركة بين كل طبقات أودو على السيرفر
+name: resta-base
+services:
+  db:
+    image: postgres:16
+    container_name: resta-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: "{{DB_USER}}"
+      POSTGRES_PASSWORD: "{{DB_PASSWORD}}"
+      POSTGRES_DB: postgres
+    command:
+      - postgres
+      - -c
+      - shared_buffers={{SHARED_BUFFERS}}
+      - -c
+      - effective_cache_size={{EFFECTIVE_CACHE}}
+      - -c
+      - max_connections={{MAX_CONNECTIONS}}
+      - -c
+      - work_mem=16MB
+      - -c
+      - maintenance_work_mem=512MB
+      - -c
+      - random_page_cost=1.1
+    shm_size: 1g
+    volumes:
+      - {{ROOT}}/data/postgres:/var/lib/postgresql/data
+    networks: [resta]
+  nginx:
+    image: nginx:stable
+    container_name: resta-nginx
+    restart: unless-stopped
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - {{ROOT}}/nginx/conf.d:/etc/nginx/conf.d:ro
+      - {{ROOT}}/nginx/resta:/etc/nginx/resta:ro
+      - {{ROOT}}/nginx/certs:/etc/nginx/certs:ro
+    networks: [resta]
+networks:
+  resta:
+    name: resta

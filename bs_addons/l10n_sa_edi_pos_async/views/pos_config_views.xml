@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- POS dashboard: say it when the ZATCA (Fatoora) onboarding is still to do -->
+    <record id="view_pos_config_kanban_zatca_pending" model="ir.ui.view">
+        <field name="name">pos.config.kanban.zatca.pending</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='card_title']" position="inside">
+                <field name="l10n_sa_zatca_pending" invisible="1"/>
+                <div t-if="record.l10n_sa_zatca_pending.raw_value" class="badge text-bg-warning d-inline-block"
+                     title="Phase-1 simplified invoices (QR code) until the sales journal is onboarded with ZATCA: Accounting > Configuration > Journals > ZATCA.">
+                    ZATCA onboarding pending
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

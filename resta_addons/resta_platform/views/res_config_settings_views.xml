@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_resta" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.resta</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="95"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="منصة ريستا" id="resta_platform" string="منصة ريستا" name="resta_platform"
+                     groups="resta_platform.group_resta_manager">
+                    <block title="Google Cloud" id="resta_gcp">
+                        <setting string="المشروع والمنطقة" help="المنطقة me-central2 هي الدمام">
+                            <div class="content-group mt8">
+                                <div class="row"><label for="resta_gcp_project" class="col-4 o_light_label"/><field name="resta_gcp_project"/></div>
+                                <div class="row"><label for="resta_gcp_region" class="col-4 o_light_label"/><field name="resta_gcp_region"/></div>
+                                <div class="row"><label for="resta_gcp_zone" class="col-4 o_light_label"/><field name="resta_gcp_zone"/></div>
+                                <div class="row"><label for="resta_gcp_network" class="col-4 o_light_label"/><field name="resta_gcp_network"/></div>
+                            </div>
+                        </setting>
+                        <setting string="مفتاح حساب الخدمة" help="الصق محتوى ملف JSON لحساب resta-platform كاملاً">
+                            <field name="resta_gcp_credentials" password="True"/>
+                            <div class="row mt8"><label for="resta_cell_sa_email" class="col-4 o_light_label"/><field name="resta_cell_sa_email"/></div>
+                        </setting>
+                        <setting string="مواصفات الخلية" help="سيرفر الساس المشترك">
+                            <div class="content-group mt8">
+                                <div class="row"><label for="resta_cell_machine_type" class="col-4 o_light_label"/><field name="resta_cell_machine_type"/></div>
+                                <div class="row"><label for="resta_cell_disk_gb" class="col-4 o_light_label"/><field name="resta_cell_disk_gb"/></div>
+                                <div class="row"><label for="resta_cell_capacity" class="col-4 o_light_label"/><field name="resta_cell_capacity"/></div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="الربط" id="resta_links">
+                        <setting string="رابط المنصة الداخلي" help="العنوان الداخلي لسيرفر المنصة مع المنفذ 8069">
+                            <field name="resta_platform_internal_url" placeholder="http://10.212.0.2:8069"/>
+                        </setting>
+                        <setting string="Cloudflare" help="مفتاح بصلاحية تعديل DNS، وشهادة Origin للنطاق">
+                            <div class="content-group mt8">
+                                <div class="row"><label for="resta_base_domain" class="col-4 o_light_label"/><field name="resta_base_domain"/></div>
+                                <div class="row"><label for="resta_cf_token" class="col-4 o_light_label"/><field name="resta_cf_token" password="True"/></div>
+                                <div class="row"><label for="resta_cf_zone_id" class="col-4 o_light_label"/><field name="resta_cf_zone_id"/></div>
+                                <div class="row"><label for="resta_origin_cert" class="col-4 o_light_label"/><field name="resta_origin_cert"/></div>
+                                <div class="row"><label for="resta_origin_key" class="col-4 o_light_label"/><field name="resta_origin_key" password="True"/></div>
+                            </div>
+                        </setting>
+                        <setting string="مفتاح التسجيل لموقع resta.sa" help="يرسله موقع ريستا في الرأس X-Resta-Key">
+                            <field name="resta_signup_key" password="True"/>
+                        </setting>
+                    </block>
+                    <block title="الكود" id="resta_code">
+                        <setting string="GitHub" help="مفتاح قراءة فقط للمستودعات">
+                            <div class="content-group mt8">
+                                <div class="row"><label for="resta_git_token" class="col-4 o_light_label"/><field name="resta_git_token" password="True"/></div>
+                                <div class="row"><label for="resta_saas_repo" class="col-4 o_light_label"/><field name="resta_saas_repo"/></div>
+                                <div class="row"><label for="resta_saas_branch" class="col-4 o_light_label"/><field name="resta_saas_branch"/></div>
+                                <div class="row"><label for="resta_agent_repo" class="col-4 o_light_label"/><field name="resta_agent_repo"/></div>
+                                <div class="row"><label for="resta_agent_branch" class="col-4 o_light_label"/><field name="resta_agent_branch"/></div>
+                                <div class="row"><label for="resta_enterprise_repo" class="col-4 o_light_label"/><field name="resta_enterprise_repo"/></div>
+                                <div class="row"><label for="resta_enterprise_branch" class="col-4 o_light_label"/><field name="resta_enterprise_branch"/></div>
+                            </div>
+                        </setting>
+                        <setting string="موديولات النسختين" help="أسماء الموديولات مفصولة بفواصل. منها يُبنى قالب كل نسخة">
+                            <div class="content-group mt8">
+                                <div class="row"><label for="resta_modules_dinein" class="col-4 o_light_label"/><field name="resta_modules_dinein"/></div>
+                                <div class="row"><label for="resta_modules_fastfood" class="col-4 o_light_label"/><field name="resta_modules_fastfood"/></div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="النسخ الاحتياطي" id="resta_backup">
+                        <setting string="3 أماكن" help="على السيرفر نفسه + Google Cloud Storage + مزوّد ثالث متوافق مع S3">
+                            <div class="content-group mt8">
+                                <div class="row"><label for="resta_restic_password" class="col-4 o_light_label"/><field name="resta_restic_password" password="True"/></div>
+                                <div class="row"><label for="resta_backup_gcs_bucket" class="col-4 o_light_label"/><field name="resta_backup_gcs_bucket"/></div>
+                                <div class="row"><label for="resta_backup_s3_url" class="col-4 o_light_label"/><field name="resta_backup_s3_url"/></div>
+                                <div class="row"><label for="resta_backup_s3_key" class="col-4 o_light_label"/><field name="resta_backup_s3_key"/></div>
+                                <div class="row"><label for="resta_backup_s3_secret" class="col-4 o_light_label"/><field name="resta_backup_s3_secret" password="True"/></div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="التشغيل والفوترة" id="resta_ops">
+                        <setting string="التوسع التلقائي" help="لما تمتلئ كل الخلايا تفتح المنصة خلية جديدة في Google Cloud">
+                            <field name="resta_auto_provision"/>
+                            <div class="row mt8"><label for="resta_load_threshold" class="col-4 o_light_label"/><field name="resta_load_threshold"/></div>
+                        </setting>
+                        <setting string="الاشتراكات">
+                            <div class="content-group mt8">
+                                <div class="row"><label for="resta_trial_days" class="col-4 o_light_label"/><field name="resta_trial_days"/></div>
+                                <div class="row"><label for="resta_grace_days" class="col-4 o_light_label"/><field name="resta_grace_days"/></div>
+                                <div class="row"><label for="resta_auto_post_invoices" class="col-4 o_light_label"/><field name="resta_auto_post_invoices"/></div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_resta_settings" model="ir.actions.act_window">
+        <field name="name">إعدادات منصة ريستا</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'resta_platform', 'bin_size': False}</field>
+    </record>
+</odoo>

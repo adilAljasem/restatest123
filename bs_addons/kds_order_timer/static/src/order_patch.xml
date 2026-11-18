@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="kds_order_timer.Screen" t-inherit="resta_kds.Screen" t-inherit-mode="extension">
+        <!-- the short number (last 3 digits) on every ticket -->
+        <xpath expr="//div[hasclass('o_kds_num')]" position="replace">
+            <div class="o_kds_num kds-order-no">#<t t-out="kdsShortNumber(t)"/></div>
+        </xpath>
+    </t>
+</templates>

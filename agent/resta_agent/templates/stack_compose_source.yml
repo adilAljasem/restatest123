@@ -1,0 +1,24 @@
+# طبقة أودو: {{STACK}} — صورة ريستا مبنية من المستودع نفسه (Dockerfile في جذر المستودع)
+name: resta-{{STACK}}
+services:
+  odoo:
+    build: ./addons
+    image: resta-odoo-{{STACK}}:latest
+    container_name: odoo-{{STACK}}
+    restart: unless-stopped
+    # نتجاوز مدخل الصورة الخاص بالتشغيل على سيرفر واحد؛ الإعدادات هنا من الوكيل
+    entrypoint: ["/usr/bin/env"]
+    command: ["odoo", "-c", "/etc/odoo/odoo.conf"]
+    volumes:
+      - {{ROOT}}/stacks/{{STACK}}/odoo.conf:/etc/odoo/odoo.conf:ro
+      - {{ROOT}}/data/odoo:/var/lib/odoo
+    networks: [resta]
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8069/web/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+networks:
+  resta:
+    external: true

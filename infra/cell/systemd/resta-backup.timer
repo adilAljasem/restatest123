@@ -1,0 +1,11 @@
+[Unit]
+Description=Resta nightly backup at 02:30 Riyadh time
+
+[Timer]
+# 23:30 UTC = 02:30 بتوقيت الرياض
+OnCalendar=*-*-* 23:30:00 UTC
+RandomizedDelaySec=900
+Persistent=true
+
+[Install]
+WantedBy=timers.target

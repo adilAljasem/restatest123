@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_resta_project_list" model="ir.ui.view">
+        <field name="name">resta.project.list</field>
+        <field name="model">resta.project</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'error'" decoration-warning="state == 'suspended'"
+                  decoration-muted="state == 'archived'">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="project_type"/>
+                <field name="partner_id"/>
+                <field name="plan_id"/>
+                <field name="branches"/>
+                <field name="server_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'"
+                       decoration-warning="state in ('suspended', 'provisioning', 'queued')" decoration-danger="state == 'error'"/>
+                <field name="monthly_amount" sum="الإجمالي"/>
+                <field name="overdue_amount" optional="show"/>
+                <field name="next_invoice_date" optional="show"/>
+                <field name="last_backup" optional="hide"/>
+                <field name="account_manager_id" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_resta_project_kanban" model="ir.ui.view">
+        <field name="name">resta.project.kanban</field>
+        <field name="model">resta.project</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" sample="1">
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between">
+                            <field name="name" class="fw-bold"/>
+                            <field name="project_type" widget="badge"/>
+                        </div>
+                        <field name="code" class="text-muted small"/>
+                        <field name="partner_id"/>
+                        <footer>
+                            <field name="monthly_amount" widget="monetary"/>
+                            <field name="activity_ids" widget="kanban_activity" class="ms-auto"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_resta_project_form" model="ir.ui.view">
+        <field name="name">resta.project.form</field>
+        <field name="model">resta.project</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_provision" type="object" string="إنشاء النظام" class="btn-primary"
+                            invisible="state not in ('draft', 'error', 'queued')"/>
+                    <button name="action_open_url" type="object" string="فتح النظام" invisible="state != 'active'"/>
+                    <button name="action_backup" type="object" string="نسخة احتياطية الآن"
+                            invisible="state not in ('active', 'suspended')"/>
+                    <button name="action_suspend_manual" type="object" string="إيقاف"
+                            invisible="state != 'active'" confirm="سيتوقف دخول المطعم للنظام. متأكد؟"/>
+                    <button name="action_resume" type="object" string="تشغيل" class="btn-primary"
+                            invisible="state != 'suspended'"/>
+                    <button name="action_create_staging" type="object" string="نسخة تجربة"
+                            invisible="state != 'active' or staging_db"/>
+                    <button name="action_deploy" type="object" string="تحديث الإنتاج"
+                            invisible="state != 'active'" groups="resta_platform.group_resta_manager"
+                            confirm="سيتوقف النظام دقائق أثناء التحديث. متأكد إنك جربت على نسخة التجربة؟"/>
+                    <button name="action_deploy_staging" type="object" string="تحديث التجربة"
+                            invisible="project_type != 'custom' or not staging_db"/>
+                    <button name="action_list_snapshots" type="object" string="تحديث قائمة النسخ"
+                            invisible="state not in ('active', 'suspended')"/>
+                    <button name="action_open_restore" type="object" string="استرجاع نسخة"
+                            invisible="state not in ('active', 'suspended')" groups="resta_platform.group_resta_manager"/>
+                    <button name="action_invoice_now" type="object" string="فاتورة الآن"
+                            invisible="state not in ('active', 'suspended')" groups="account.group_account_invoice"/>
+                    <button name="action_send_welcome" type="object" string="إرسال بيانات الدخول"
+                            invisible="state != 'active'"/>
+                    <button name="action_archive_project" type="object" string="أرشفة" class="btn-danger"
+                            invisible="state not in ('active', 'suspended')" groups="resta_platform.group_resta_manager"
+                            confirm="آخر نسخة احتياطية ثم حذف القاعدة من السيرفر. متأكد؟"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,queued,provisioning,active,suspended"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="invoice_count" widget="statinfo" string="الفواتير"/>
+                        </button>
+                        <button name="action_view_operations" type="object" class="oe_stat_button" icon="fa-cogs">
+                            <field name="operation_count" widget="statinfo" string="العمليات"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="اسم العلامة أو العميل"/></h1>
+                        <div class="d-flex align-items-center gap-1">
+                            <field name="code" placeholder="kaffa" class="oe_inline" readonly="state != 'draft'"/>
+                            <span class="text-muted">.restaerp.com</span>
+                        </div>
+                    </div>
+                    <group>
+                        <group string="العميل">
+                            <field name="project_type" readonly="state != 'draft'"/>
+                            <field name="partner_id"/>
+                            <field name="admin_name"/>
+                            <field name="admin_email" widget="email"/>
+                            <field name="account_manager_id"/>
+                        </group>
+                        <group string="الاشتراك">
+                            <field name="plan_id"/>
+                            <field name="edition" invisible="project_type != 'saas'" readonly="state != 'draft'"/>
+                            <field name="branches"/>
+                            <field name="monthly_amount"/>
+                            <field name="trial_end"/>
+                            <field name="next_invoice_date"/>
+                            <field name="overdue_amount" invisible="not overdue_amount"/>
+                            <field name="suspend_reason" invisible="state != 'suspended'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="التشغيل">
+                            <group>
+                                <group>
+                                    <field name="server_id"/>
+                                    <field name="db_name"/>
+                                    <field name="url" widget="url"/>
+                                    <field name="staging_db"/>
+                                    <field name="staging_url" widget="url" invisible="not staging_db"/>
+                                </group>
+                                <group>
+                                    <field name="db_size_mb"/>
+                                    <field name="filestore_mb"/>
+                                    <field name="last_backup"/>
+                                    <field name="deployed_commit"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="الكود (كاستم)" invisible="project_type != 'custom'">
+                            <group>
+                                <field name="repo_url" placeholder="https://github.com/walsoodi/emkan.git"/>
+                                <field name="branch"/>
+                                <field name="staging_branch"/>
+                                <field name="init_modules" placeholder="point_of_sale,stock,account"/>
+                            </group>
+                        </page>
+                        <page string="الفواتير">
+                            <field name="invoice_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="invoice_date"/>
+                                    <field name="invoice_date_due"/>
+                                    <field name="amount_total"/>
+                                    <field name="payment_state" widget="badge"/>
+                                    <field name="state" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="ملاحظات"><field name="notes"/></page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_resta_project_search" model="ir.ui.view">
+        <field name="name">resta.project.search</field>
+        <field name="model">resta.project</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="partner_id"/>
+                <field name="server_id"/>
+                <filter name="saas" string="ساس" domain="[('project_type', '=', 'saas')]"/>
+                <filter name="custom" string="كاستم" domain="[('project_type', '=', 'custom')]"/>
+                <separator/>
+                <filter name="active_p" string="تعمل" domain="[('state', '=', 'active')]"/>
+                <filter name="suspended" string="موقوفة" domain="[('state', '=', 'suspended')]"/>
+                <filter name="not_archived" string="غير مؤرشفة" domain="[('state', '!=', 'archived')]"/>
+                <separator/>
+                <filter name="by_server" string="السيرفر" context="{'group_by': 'server_id'}"/>
+                <filter name="by_plan" string="الباقة" context="{'group_by': 'plan_id'}"/>
+                <filter name="by_manager" string="مدير الحساب" context="{'group_by': 'account_manager_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_resta_project" model="ir.actions.act_window">
+        <field name="name">المشاريع</field>
+        <field name="res_model">resta.project</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'search_default_not_archived': 1}</field>
+    </record>
+</odoo>

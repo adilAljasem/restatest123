@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_resta_restore_wizard_form" model="ir.ui.view">
+        <field name="name">resta.restore.wizard.form</field>
+        <field name="model">resta.restore.wizard</field>
+        <field name="arch" type="xml">
+            <form string="استرجاع نسخة">
+                <group>
+                    <field name="project_id"/>
+                    <field name="mode" widget="radio"/>
+                    <field name="snapshot"/>
+                    <field name="confirm_code" invisible="mode != 'replace'" required="mode == 'replace'"/>
+                </group>
+                <div class="alert alert-warning" role="alert" invisible="mode != 'replace'">
+                    سيتوقف النظام لحظات، وتحل النسخة مكان قاعدة الإنتاج. القاعدة الحالية لا تُحذف بل تُحفظ باسم جانبي
+                    حتى ترجعون لها إذا احتجتم.
+                </div>
+                <div class="alert alert-info" role="alert" invisible="mode != 'staging'">
+                    النسخة تُفتح على رابط التجربة بدون إيميلات أو مهام مجدولة، والإنتاج يبقى كما هو.
+                </div>
+                <field name="available_html" nolabel="1"/>
+                <footer>
+                    <button name="action_restore" type="object" string="استرجاع" class="btn-primary"/>
+                    <button string="إلغاء" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
